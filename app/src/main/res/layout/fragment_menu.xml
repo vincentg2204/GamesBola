@@ -30,4 +30,6 @@
         android:layout_below="@id/new_btn"
         android:id="@+id/exit_btn"/>
 
+
+
 </RelativeLayout>
