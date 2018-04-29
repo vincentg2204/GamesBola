@@ -7,12 +7,31 @@ public class Bola {
     private float y;
     private Paint paint;
     private float radius;
+    private float xVelo,yVelo;
 
     public Bola(float x, float y, Paint paint, float radius) {
         this.x = x;
         this.y = y;
         this.paint = paint;
         this.radius = radius;
+        xVelo = 0;
+        yVelo = 0;
+    }
+
+    public float getxVelo() {
+        return xVelo;
+    }
+
+    public void setxVelo(float xVelo) {
+        this.xVelo = xVelo;
+    }
+
+    public float getyVelo() {
+        return yVelo;
+    }
+
+    public void setyVelo(float yVelo) {
+        this.yVelo = yVelo;
     }
 
     public float getRadius() {

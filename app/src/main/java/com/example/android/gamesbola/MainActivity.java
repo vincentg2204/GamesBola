@@ -8,14 +8,16 @@ import android.os.Bundle;
 public class MainActivity extends AppCompatActivity {
     private FragmentGames fragmentGames;
     private FragmentManager fragmentManager;
+    private MainPresenter presenter;
 
     public static int PAGE_GAMES = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        presenter = new MainPresenter();
 
-        fragmentGames = FragmentGames.newInstance(this,"GAME FRAGMENT");
+        fragmentGames = FragmentGames.newInstance(this,presenter,"GAME FRAGMENT");
 
         fragmentManager = getSupportFragmentManager();
         changePage(PAGE_GAMES);

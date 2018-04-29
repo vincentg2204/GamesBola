@@ -27,13 +27,15 @@ import android.widget.TextView;
 
 import static com.example.android.gamesbola.R.color.black;
 
-public class FragmentGames extends Fragment implements SensorEventListener {
+public class FragmentGames extends Fragment implements SensorEventListener, View.OnClickListener {
     private ImageView ivBoard;
     private Canvas canvas;
     private Bitmap bitmap;
 
     private Button btnNew, btnExit;
     private TextView tvWaktu;
+
+    private MainPresenter presenter;
 
     private SensorManager mSensorManager;
     private Sensor mSensorAccelerometer, mSensorMagnetometer;
@@ -46,9 +48,10 @@ public class FragmentGames extends Fragment implements SensorEventListener {
     public FragmentGames() {
     }
 
-    public static FragmentGames newInstance(MainActivity mainActivity, String title) {
+    public static FragmentGames newInstance(MainActivity mainActivity,MainPresenter presenter, String title) {
         FragmentGames fragment = new FragmentGames();
         fragment.setMainActivity(mainActivity);
+        fragment.setMainPresenter(presenter);
         Bundle args = new Bundle();
         args.putString("title", title);
         fragment.setArguments(args);
@@ -75,27 +78,12 @@ public class FragmentGames extends Fragment implements SensorEventListener {
                 bitmap = Bitmap.createBitmap(ivBoard.getWidth(),ivBoard.getHeight(), Bitmap.Config.ARGB_8888);
                 ivBoard.setImageBitmap(bitmap);
                 canvas = new Canvas(bitmap);
-
-                float x1 = (float) (Math.random()*(ivBoard.getWidth()-300) + 100);
-                float y1 = (float) (Math.random()*(ivBoard.getHeight()/2) + 100);
-                float x2 = (float) (Math.random()*(ivBoard.getWidth()-300) + 100);
-                float y2 = (float) (Math.random()*(ivBoard.getHeight()/2)+(ivBoard.getHeight()/2)-100);
-
-                Paint paint1 = new Paint();
-                paint1.setColor(Color.BLACK);
-                paint1.setAntiAlias(true);
-                lobang = new Bola(x1,y1,paint1,85f);
-                Paint paint2 = new Paint();
-                paint2.setColor(Color.RED);
-                paint2.setAntiAlias(true);
-                bola = new Bola(x2,y2,paint2,85f);
-                canvas.drawColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
-                canvas.drawCircle(lobang.getX(),lobang.getY(),lobang.getRadius(), lobang.getPaint());
-                canvas.drawCircle(bola.getX(),bola.getY(),bola.getRadius(), bola.getPaint());
-
-                ivBoard.invalidate();
+                newGames();
             }
         });
+
+        btnNew.setOnClickListener(this);
+        btnExit.setOnClickListener(this);
 
         mSensorManager = (SensorManager) ctx.getSystemService(Context.SENSOR_SERVICE);
         mSensorAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -104,7 +92,6 @@ public class FragmentGames extends Fragment implements SensorEventListener {
         mDisplay = wm.getDefaultDisplay();
         mAccelerometerData = new float[9];
         mMagnetometerData = new float[9];
-
 
         return view;
     }
@@ -160,19 +147,11 @@ public class FragmentGames extends Fragment implements SensorEventListener {
         if (rotationOK) {
             SensorManager.getOrientation(rotationmatrixAdjusted, orientationValues);
         }
-        float azimuth = orientationValues[0];
-        float pitch = orientationValues[1];
-        float roll = orientationValues[2];
-        if (Math.abs(pitch) < 0.05f) {
-            pitch = 0;
-        }
-        if (Math.abs(roll) < 0.05f) {
-            roll = 0;
-        }
-        if(canvas != null && lobang != null && bola != null){
-            bola.setX(bola.getX()+roll*10);
-            bola.setY(bola.getY()-pitch*10);
 
+        if(canvas != null && lobang != null && bola != null){
+            updateBall(ivBoard,
+                    (Math.abs(orientationValues[1])<0.05f)? 0f : orientationValues[1],
+                    (Math.abs(orientationValues[2])<0.05f)? 0f : orientationValues[2]);
             canvas.drawColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
             canvas.drawCircle(lobang.getX(),lobang.getY(),lobang.getRadius(),lobang.getPaint());
             canvas.drawCircle(bola.getX(),bola.getY(),bola.getRadius(),bola.getPaint());
@@ -183,5 +162,36 @@ public class FragmentGames extends Fragment implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    private void newGames(){
+        Bola[] obj = presenter.newGames(ivBoard);
+        lobang = obj[0];
+        bola = obj[1];
+
+        canvas.drawColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
+        canvas.drawCircle(lobang.getX(),lobang.getY(),lobang.getRadius(), lobang.getPaint());
+        canvas.drawCircle(bola.getX(),bola.getY(),bola.getRadius(), bola.getPaint());
+
+        ivBoard.invalidate();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v == btnNew){
+            newGames();
+        }else if(v == btnExit){
+
+        }
+    }
+
+    private void updateBall(ImageView papan, float yAcceleration, float xAcceleration){
+        presenter.updateBola(papan,bola,xAcceleration,yAcceleration);
+    }
+
+
+
+    public void setMainPresenter(MainPresenter mainPresenter) {
+        this.presenter = mainPresenter;
     }
 }
