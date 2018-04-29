@@ -24,7 +24,6 @@ public class MainPresenter {
 
         Paint paint1 = new Paint();
         paint1.setColor(Color.BLACK);
-        paint1.setAntiAlias(true);
         Bola lubang = new Bola(x1, y1, paint1, 85f);
 
         float x2 = (float) (Math.random() * (ivBoard.getWidth() - 300) + 100);
@@ -32,7 +31,6 @@ public class MainPresenter {
 
         Paint paint2 = new Paint();
         paint2.setColor(Color.RED);
-        paint2.setAntiAlias(true);
         Bola bola = new Bola(x2, y2, paint2, 85f);
         return new Bola[]{lubang, bola};
     }

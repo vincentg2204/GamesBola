@@ -17,10 +17,8 @@ public class FragmentMenu extends Fragment implements View.OnClickListener{
 
     private Button newBtn, exitBtn;
     private MainActivity ui;
-    private Context ctx;
 
     public FragmentMenu(){
-        this.ui = new MainActivity();
     }
 
     public static FragmentMenu newInstance(MainActivity mainActivity, String title) {
@@ -34,7 +32,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener{
 
 
     public void setMainActivity(MainActivity ui) {
-        this.ctx = ui;
+        this.ui = ui;
     }
 
     @Nullable
@@ -53,7 +51,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         if (v.getId() == newBtn.getId()){
-            //ui.changePage(1);
+            ui.changePage(MainActivity.PAGE_GAMES);
         }
         if (v.getId() == exitBtn.getId()){
             System.exit(0);

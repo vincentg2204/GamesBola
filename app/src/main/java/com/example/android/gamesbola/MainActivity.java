@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity{
         presenter = new MainPresenter();
 
         fragmentGames = FragmentGames.newInstance(this,presenter,"GAME FRAGMENT");
+        fragmentMenu = FragmentMenu.newInstance(this,"MENU FRAGMENT");
 
         this.nv = findViewById(R.id.nav_view);
         this.dl = findViewById(R.id.drawer_layout);
@@ -48,10 +49,10 @@ public class MainActivity extends AppCompatActivity{
         actionBar.setDisplayShowTitleEnabled(false);
 
         setupDrawerContent(nv);
-        fragmentMenu = new FragmentMenu();
-        fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fragment_container,fragmentMenu).commit();
 
+        fragmentManager = getSupportFragmentManager();
+
+        changePage(PAGE_MENU);
     }
 
     public void changePage(int page){
@@ -66,6 +67,8 @@ public class MainActivity extends AppCompatActivity{
         if (page == PAGE_MENU){
             if (fragmentMenu.isAdded()){
                 ft.show(fragmentMenu);
+            }else {
+                ft.add(R.id.fragment_container, fragmentMenu);
             }
         }
             ft.commit();
