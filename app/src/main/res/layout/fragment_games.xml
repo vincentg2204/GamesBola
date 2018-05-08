@@ -8,6 +8,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/menu_bawah"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Score : 0"
+        android:textColor="@color/black"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:textSize="@dimen/_18sdp"
+        android:id="@+id/tvScore"/>
     <LinearLayout
         android:id="@+id/menu_bawah"
         android:layout_alignParentBottom="true"

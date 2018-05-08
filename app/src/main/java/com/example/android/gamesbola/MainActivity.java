@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             if (fragmentGames.isAdded()) {
                 ft.show(fragmentGames);
             } else {
-                ft.add(R.id.fragment_container, fragmentGames).addToBackStack(null);
+                ft.add(R.id.fragment_container, fragmentGames);
             }
         } else if (page == PAGE_MENU) {
             if (fragmentMenu.isAdded()) {

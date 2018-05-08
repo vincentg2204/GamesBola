@@ -125,14 +125,8 @@ public class MainPresenter {
         mainActivity.setTime();
     }
 
-    public String getWaktu() {
-        String result = "00:";
-        if (waktu < 10) {
-            result += "0" + waktu;
-        } else {
-            result += waktu;
-        }
-        return result;
+    public int getWaktu() {
+        return waktu;
     }
 
     public void setGameOver(boolean gameOver) {

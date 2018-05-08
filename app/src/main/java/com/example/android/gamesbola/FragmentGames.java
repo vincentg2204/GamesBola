@@ -45,6 +45,11 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
     private MainActivity ctx;
     private CounterAsyncTask cat;
 
+    private TextView tvScore;
+    private int currentScore = 0;
+
+    private int currentWaktu = 31;
+
     public FragmentGames() {
     }
     public void setGameOver(boolean gameOver){
@@ -64,7 +69,14 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
     public void setMainActivity(MainActivity ui) {
         this.ctx = ui;
     }
-    public void setTextTVWaktu(String text){
+    public void setTextTVWaktu(int waktu){
+        currentWaktu = waktu;
+        String text = "00:";
+        if(currentWaktu < 10){
+            text += "0"+currentWaktu;
+        }else{
+            text += currentWaktu;
+        }
         tvWaktu.setText(text);
     }
 
@@ -76,6 +88,8 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
         tvWaktu = view.findViewById(R.id.tv_waktu);
         btnNew = view.findViewById(R.id.new_btn);
         btnExit = view.findViewById(R.id.exit_btn);
+
+        tvScore = view.findViewById(R.id.tvScore);
 
         ivBoard = view.findViewById(R.id.iv_board);
         ivBoard.post(new Runnable() {
@@ -164,7 +178,7 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
                 canvas.drawCircle(bola.getX(), bola.getY(), bola.getRadius(), bola.getPaint());
                 ivBoard.invalidate();
                 if (presenter.isInside(bola, lobang)) {
-                    newGames();
+                    nextLevel();
                 }
             }else{
                 btnNew.setText("TRY AGAIN");
@@ -176,10 +190,37 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
-
-    private void newGames(){
+    private void nextLevel(){
+        currentWaktu = 31;
         btnNew.setText("NEW");
         gameOver = false;
+        currentScore += (int)(currentWaktu * 3.3);
+        tvScore.setText("Score: "+currentScore);
+
+        Bola[] obj = presenter.newGames(ivBoard);
+        lobang = obj[0];
+        bola = obj[1];
+
+        canvas.drawColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
+        canvas.drawCircle(lobang.getX(),lobang.getY(),lobang.getRadius(), lobang.getPaint());
+        canvas.drawCircle(bola.getX(),bola.getY(),bola.getRadius(), bola.getPaint());
+
+        ivBoard.invalidate();
+
+        if(cat != null) {
+            cat.cancel(true);
+        }
+        cat = new CounterAsyncTask(presenter);
+        cat.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 31);
+    }
+
+    private void newGames(){
+        currentWaktu = 31;
+        btnNew.setText("NEW");
+        gameOver = false;
+        currentScore = 0;
+        tvScore.setText("Score: "+currentScore);
+
         Bola[] obj = presenter.newGames(ivBoard);
         lobang = obj[0];
         bola = obj[1];
