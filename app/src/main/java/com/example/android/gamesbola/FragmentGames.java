@@ -1,15 +1,13 @@
 package com.example.android.gamesbola;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,8 +23,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import static com.example.android.gamesbola.R.color.black;
-
 public class FragmentGames extends Fragment implements SensorEventListener, View.OnClickListener {
     private ImageView ivBoard;
     private Canvas canvas;
@@ -34,6 +30,7 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
 
     private Button btnNew, btnExit;
     private TextView tvWaktu;
+    private boolean gameOver = false;
 
     private MainPresenter presenter;
 
@@ -44,8 +41,12 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
 
     private Bola bola,lobang;
     private MainActivity ctx;
+    private CounterAsyncTask cat;
 
     public FragmentGames() {
+    }
+    public void setGameOver(boolean gameOver){
+        this.gameOver = gameOver;
     }
 
     public static FragmentGames newInstance(MainActivity mainActivity,MainPresenter presenter, String title) {
@@ -60,6 +61,9 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
 
     public void setMainActivity(MainActivity ui) {
         this.ctx = ui;
+    }
+    public void setTextTVWaktu(String text){
+        tvWaktu.setText(text);
     }
 
     @Nullable
@@ -149,13 +153,20 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
         }
 
         if(canvas != null && lobang != null && bola != null){
-            updateBall(ivBoard,
-                    (Math.abs(orientationValues[1])<0.05f)? 0f : orientationValues[1],
-                    (Math.abs(orientationValues[2])<0.05f)? 0f : orientationValues[2]);
-            canvas.drawColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
-            canvas.drawCircle(lobang.getX(),lobang.getY(),lobang.getRadius(),lobang.getPaint());
-            canvas.drawCircle(bola.getX(),bola.getY(),bola.getRadius(),bola.getPaint());
-            ivBoard.invalidate();
+            if(!gameOver) {
+                updateBall(ivBoard,
+                        (Math.abs(orientationValues[1]) < 0.05f) ? 0f : orientationValues[1],
+                        (Math.abs(orientationValues[2]) < 0.05f) ? 0f : orientationValues[2]);
+                canvas.drawColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
+                canvas.drawCircle(lobang.getX(), lobang.getY(), lobang.getRadius(), lobang.getPaint());
+                canvas.drawCircle(bola.getX(), bola.getY(), bola.getRadius(), bola.getPaint());
+                ivBoard.invalidate();
+                if (presenter.isInside(bola, lobang)) {
+                    newGames();
+                }
+            }else{
+                btnNew.setText("TRY AGAIN");
+            }
         }
     }
 
@@ -165,6 +176,7 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
     }
 
     private void newGames(){
+        btnNew.setText("NEW");
         Bola[] obj = presenter.newGames(ivBoard);
         lobang = obj[0];
         bola = obj[1];
@@ -174,6 +186,13 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
         canvas.drawCircle(bola.getX(),bola.getY(),bola.getRadius(), bola.getPaint());
 
         ivBoard.invalidate();
+
+        if(cat != null) {
+            cat.cancel(true);
+        }
+        cat = new CounterAsyncTask(presenter);
+        cat.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 31);
+
     }
 
     @Override
@@ -181,7 +200,7 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
         if(v == btnNew){
             newGames();
         }else if(v == btnExit){
-
+            this.ctx.onBackPressed();
         }
     }
 

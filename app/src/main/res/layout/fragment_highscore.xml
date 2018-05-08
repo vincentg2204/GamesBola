@@ -10,6 +10,7 @@
         android:id="@+id/label_highscore"
         android:text="HIGHSCORE"
         android:textAlignment="center"
+        android:textColor="@color/black"
         android:textSize="@dimen/_30sdp"/>
     <ListView
         android:layout_width="match_parent"

@@ -16,12 +16,13 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     private FragmentGames fragmentGames;
     private FragmentManager fragmentManager;
+    private FragmentMenu fragmentMenu;
+    private FragmentHighscore fragmentHighscore;
     private MainPresenter presenter;
 
-    private FragmentMenu fragmentMenu;
     private NavigationView nv;
     private ActionBar actionBar;
     private Toolbar toolbar;
@@ -29,15 +30,18 @@ public class MainActivity extends AppCompatActivity{
 
     public static int PAGE_GAMES = 1;
     public static int PAGE_MENU = 2;
+    public static int PAGE_HIGHSCORE = 3;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        presenter = new MainPresenter();
+        presenter = new MainPresenter(this);
 
-        fragmentGames = FragmentGames.newInstance(this,presenter,"GAME FRAGMENT");
-        fragmentMenu = FragmentMenu.newInstance(this,"MENU FRAGMENT");
+        fragmentGames = FragmentGames.newInstance(this, presenter, "GAME FRAGMENT");
+        fragmentMenu = FragmentMenu.newInstance(this, "MENU FRAGMENT");
+        fragmentHighscore = FragmentHighscore.newInstance(this, "HIGHSCORE FRAGMENT");
 
         this.nv = findViewById(R.id.nav_view);
         this.dl = findViewById(R.id.drawer_layout);
@@ -51,32 +55,45 @@ public class MainActivity extends AppCompatActivity{
         setupDrawerContent(nv);
 
         fragmentManager = getSupportFragmentManager();
-
         changePage(PAGE_MENU);
     }
 
-    public void changePage(int page){
+    public void changePage(int page) {
         FragmentTransaction ft = this.fragmentManager.beginTransaction();
-        if(page == PAGE_GAMES){
+        if (page == PAGE_GAMES) {
             if (fragmentGames.isAdded()) {
                 ft.show(fragmentGames);
             } else {
                 ft.add(R.id.fragment_container, fragmentGames).addToBackStack(null);
             }
-        }
-        if (page == PAGE_MENU){
-            if (fragmentMenu.isAdded()){
+        } else if (page == PAGE_MENU) {
+            if (fragmentMenu.isAdded()) {
                 ft.show(fragmentMenu);
-            }else {
+            } else {
                 ft.add(R.id.fragment_container, fragmentMenu);
             }
+        } else if (page == PAGE_HIGHSCORE) {
+            if (fragmentHighscore.isAdded()) {
+                ft.show(fragmentHighscore);
+            } else {
+                ft.add(R.id.fragment_container, fragmentHighscore);
+            }
         }
-            ft.commit();
+        ft.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 dl.openDrawer(GravityCompat.START);
                 return true;
@@ -85,23 +102,23 @@ public class MainActivity extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupDrawerContent(NavigationView nv){
+    private void setupDrawerContent(NavigationView nv) {
         nv.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                selectDrawerItem(item);
-                return true;
-            }
-        });
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        selectDrawerItem(item);
+                        return true;
+                    }
+                });
     }
 
-    public void selectDrawerItem(MenuItem item){
+    public void selectDrawerItem(MenuItem item) {
         Fragment fragment = null;
         FragmentTransaction ft = fragmentManager.beginTransaction();
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.high_score:
-                fragment = fragmentGames;
+                fragment = fragmentHighscore;
                 break;
             case R.id.setting:
                 fragment = fragmentGames;
@@ -112,5 +129,13 @@ public class MainActivity extends AppCompatActivity{
         ft.replace(R.id.fragment_container, fragment).commit();
         dl.closeDrawers();
         item.setChecked(true);
+    }
+
+    public void setTime() {
+        fragmentGames.setTextTVWaktu(presenter.getWaktu());
+    }
+
+    public void setGameOver(boolean gameOver) {
+        fragmentGames.setGameOver(gameOver);
     }
 }
