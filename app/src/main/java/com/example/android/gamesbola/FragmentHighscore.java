@@ -11,7 +11,7 @@ import android.support.v4.app.Fragment;
 
 public class FragmentHighscore extends Fragment{
     private ListView listHighscore;
-    AdapterHighscore adapterHighscore;
+    public AdapterHighscore adapterHighscore;
     MainActivity ui;
 
     public FragmentHighscore(){
@@ -34,9 +34,13 @@ public class FragmentHighscore extends Fragment{
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_menu, container,false);
+        View v = inflater.inflate(R.layout.fragment_highscore, container,false);
 
+        this.adapterHighscore = new AdapterHighscore(ui);
         this.listHighscore = v.findViewById(R.id.list_highscore);
+        for (int i =0 ;i<this.adapterHighscore.listScore.size();i++){
+            this.adapterHighscore.listScore.add(i);
+        }
         this.listHighscore.setAdapter(adapterHighscore);
         return v;
     }

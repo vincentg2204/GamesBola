@@ -10,23 +10,23 @@ import java.util.ArrayList;
 
 public class AdapterHighscore extends BaseAdapter {
 
-    public ArrayList<Integer> listAngka;
+    public ArrayList<Integer> listUrutan,listScore;
     MainActivity mainActivity;
     ViewHolder vh;
 
     public AdapterHighscore(MainActivity mainActivity){
         this.mainActivity = mainActivity;
-        this.listAngka = new ArrayList<>();
+        this.listScore = new ArrayList<>();
 
     }
     @Override
     public int getCount() {
-        return listAngka.size();
+        return listScore.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return listAngka.get(position);
+        return listScore.get(position);
     }
 
     @Override
