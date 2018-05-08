@@ -44,6 +44,7 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
 
     private Bola bola,lobang;
     private MainActivity ctx;
+    private android.support.v7.app.ActionBar actionBar;
 
     public FragmentGames() {
     }
@@ -70,6 +71,7 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
         tvWaktu = view.findViewById(R.id.tv_waktu);
         btnNew = view.findViewById(R.id.new_btn);
         btnExit = view.findViewById(R.id.exit_btn);
+
 
         ivBoard = view.findViewById(R.id.iv_board);
         ivBoard.post(new Runnable() {
@@ -181,7 +183,7 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
         if(v == btnNew){
             newGames();
         }else if(v == btnExit){
-
+            System.exit(0);
         }
     }
 

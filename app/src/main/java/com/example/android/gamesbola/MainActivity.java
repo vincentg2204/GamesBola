@@ -19,6 +19,7 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity{
     private FragmentGames fragmentGames;
     private FragmentManager fragmentManager;
+    private FragmentSettings fragmentSettings;
     private MainPresenter presenter;
 
     private FragmentMenu fragmentMenu;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity{
 
         fragmentGames = FragmentGames.newInstance(this,presenter,"GAME FRAGMENT");
         fragmentMenu = FragmentMenu.newInstance(this,"MENU FRAGMENT");
+        fragmentSettings = FragmentSettings.newInstance(this, "SETTINGS FRAGMENT");
 
         this.nv = findViewById(R.id.nav_view);
         this.dl = findViewById(R.id.drawer_layout);
@@ -104,7 +106,7 @@ public class MainActivity extends AppCompatActivity{
                 fragment = fragmentGames;
                 break;
             case R.id.setting:
-                fragment = fragmentGames;
+                fragment = fragmentSettings;
                 break;
             case R.id.exit:
                 System.exit(0);
