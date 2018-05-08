@@ -179,6 +179,7 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
 
     private void newGames(){
         btnNew.setText("NEW");
+        gameOver = false;
         Bola[] obj = presenter.newGames(ivBoard);
         lobang = obj[0];
         bola = obj[1];

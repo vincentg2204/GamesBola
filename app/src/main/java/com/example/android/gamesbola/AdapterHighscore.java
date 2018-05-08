@@ -7,25 +7,31 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class AdapterHighscore extends BaseAdapter {
 
-    public ArrayList<Integer> listUrutan,listScore;
+    public ArrayList<Integer> listScore;
     MainActivity mainActivity;
     ViewHolder vh;
 
     public AdapterHighscore(MainActivity mainActivity){
         this.mainActivity = mainActivity;
         this.listScore = new ArrayList<>();
-
     }
+
+    public void sortListScore(){
+        Collections.sort(listScore);
+        Collections.reverse(listScore);
+    }
+
     @Override
     public int getCount() {
         return listScore.size();
     }
 
     @Override
-    public Object getItem(int position) {
+    public Integer getItem(int position) {
         return listScore.get(position);
     }
 
@@ -44,9 +50,10 @@ public class AdapterHighscore extends BaseAdapter {
         else{
             vh = (ViewHolder) convertView.getTag();
         }
-        for (int i = 1;i<5;i++){
-            vh.update(i,i+1);
-        }
+//        for (int i = 0;i<listScore.size();i++){
+//            vh.update(i+1, listScore.get(i));
+//        }
+        vh.update(position+1, getItem(position));
         return convertView;
     }
 

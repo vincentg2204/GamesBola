@@ -38,9 +38,15 @@ public class FragmentHighscore extends Fragment{
 
         this.adapterHighscore = new AdapterHighscore(ui);
         this.listHighscore = v.findViewById(R.id.list_highscore);
-        for (int i =0 ;i<this.adapterHighscore.listScore.size();i++){
-            this.adapterHighscore.listScore.add(i);
+//        for (int i =0 ;i<this.adapterHighscore.listScore.size();i++){
+//            this.adapterHighscore.listScore.add((i+1) * 100);
+//        }
+        //DATA DUMMY
+        //TODO GANTI JADI DATA BENERAN
+        for (int i =0 ;i<10;i++){
+            this.adapterHighscore.listScore.add((i+1) * 100);
         }
+        adapterHighscore.sortListScore();
         this.listHighscore.setAdapter(adapterHighscore);
         return v;
     }

@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentGames fragmentGames;
     private FragmentManager fragmentManager;
     private FragmentMenu fragmentMenu;
+    private FragmentSettings fragmentSettings;
     private FragmentHighscore fragmentHighscore;
     private MainPresenter presenter;
 
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     public static int PAGE_GAMES = 1;
     public static int PAGE_MENU = 2;
     public static int PAGE_HIGHSCORE = 3;
+    public static int PAGE_SETTINGS = 4;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentGames = FragmentGames.newInstance(this, presenter, "GAME FRAGMENT");
         fragmentMenu = FragmentMenu.newInstance(this, "MENU FRAGMENT");
         fragmentHighscore = FragmentHighscore.newInstance(this, "HIGHSCORE FRAGMENT");
+        fragmentSettings = FragmentSettings.newInstance(this, "SETTINGS FRAGMENT");
 
         this.nv = findViewById(R.id.nav_view);
         this.dl = findViewById(R.id.drawer_layout);
@@ -76,7 +79,13 @@ public class MainActivity extends AppCompatActivity {
             if (fragmentHighscore.isAdded()) {
                 ft.show(fragmentHighscore);
             } else {
-                ft.add(R.id.fragment_container, fragmentHighscore);
+                ft.add(R.id.fragment_container, fragmentHighscore).addToBackStack(null);
+            }
+        }else if(page == PAGE_SETTINGS){
+            if (fragmentSettings.isAdded()) {
+                ft.show(fragmentSettings);
+            } else {
+                ft.add(R.id.fragment_container, fragmentSettings).addToBackStack(null);
             }
         }
         ft.commit();
@@ -118,15 +127,14 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction ft = fragmentManager.beginTransaction();
         switch (item.getItemId()) {
             case R.id.high_score:
-                fragment = fragmentHighscore;
+                changePage(PAGE_HIGHSCORE);
                 break;
             case R.id.setting:
-                fragment = fragmentGames;
+                changePage(PAGE_SETTINGS);
                 break;
             case R.id.exit:
                 System.exit(0);
         }
-        ft.replace(R.id.fragment_container, fragment).commit();
         dl.closeDrawers();
         item.setChecked(true);
     }
