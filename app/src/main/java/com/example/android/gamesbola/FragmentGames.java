@@ -3,6 +3,8 @@ package com.example.android.gamesbola;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -151,7 +153,7 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
         if (rotationOK) {
             SensorManager.getOrientation(rotationmatrixAdjusted, orientationValues);
         }
-
+        tampilanWaktu();
         if(canvas != null && lobang != null && bola != null){
             if(!gameOver) {
                 updateBall(ivBoard,
@@ -207,9 +209,15 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
     private void updateBall(ImageView papan, float yAcceleration, float xAcceleration){
         presenter.updateBola(papan,bola,xAcceleration,yAcceleration);
     }
-
-
-
+    private void tampilanWaktu(){
+        if(gameOver) {
+            tvWaktu.setTextColor(getResources().getColor(R.color.red));
+            tvWaktu.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        }else{
+            tvWaktu.setTextColor(getResources().getColor(R.color.black));
+            tvWaktu.setTypeface(Typeface.DEFAULT);
+        }
+    }
     public void setMainPresenter(MainPresenter mainPresenter) {
         this.presenter = mainPresenter;
     }
