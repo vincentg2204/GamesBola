@@ -11,13 +11,37 @@ import java.util.Collections;
 
 public class AdapterHighscore extends BaseAdapter {
 
-    public ArrayList<Integer> listScore;
-    MainActivity mainActivity;
-    ViewHolder vh;
+    private ArrayList<Integer> listScore;
+    private MainActivity mainActivity;
+    private ViewHolder vh;
 
     public AdapterHighscore(MainActivity mainActivity){
         this.mainActivity = mainActivity;
         this.listScore = new ArrayList<>();
+    }
+
+    public ArrayList<Integer> getListScore() {
+        return listScore;
+    }
+
+    public void setListScore(ArrayList<Integer> listScore) {
+        this.listScore = listScore;
+    }
+
+    public MainActivity getMainActivity() {
+        return mainActivity;
+    }
+
+    public void setMainActivity(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+    }
+
+    public ViewHolder getVh() {
+        return vh;
+    }
+
+    public void setVh(ViewHolder vh) {
+        this.vh = vh;
     }
 
     public void sortListScore(){

@@ -83,22 +83,22 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:layout_marginRight="7dp"
-            android:background="@color/orange"
-            android:id="@+id/orange"/>
+            android:background="@color/type1"
+            android:id="@+id/type1"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
             android:layout_marginRight="7dp"
-            android:background="@color/colorPrimaryDark"
-            android:id="@+id/blue"/>
+            android:background="@color/type2"
+            android:id="@+id/type2"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
             android:layout_marginRight="7dp"
-            android:background="@color/colorAccent"
-            android:id="@+id/pink"/>
+            android:background="@color/type3"
+            android:id="@+id/type3"/>
     </LinearLayout>
 
     <TextView

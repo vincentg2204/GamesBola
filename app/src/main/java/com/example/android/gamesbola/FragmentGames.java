@@ -49,6 +49,7 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
     private int currentScore = 0;
 
     private int currentWaktu = 31;
+    private int flag = 0;
 
     public FragmentGames() {
     }
@@ -181,7 +182,11 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
                     nextLevel();
                 }
             }else{
-                btnNew.setText("TRY AGAIN");
+                if(flag == 0) {
+                    btnNew.setText("TRY AGAIN");
+                    presenter.updateListOfScore(currentScore);
+                    flag = 1;
+                }
             }
         }
     }
@@ -191,11 +196,13 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
 
     }
     private void nextLevel(){
-        currentWaktu = 31;
-        btnNew.setText("NEW");
+        flag = 0;
         gameOver = false;
         currentScore += (int)(currentWaktu * 3.3);
         tvScore.setText("Score: "+currentScore);
+
+        currentWaktu = 31;
+        btnNew.setText("NEW");
 
         Bola[] obj = presenter.newGames(ivBoard);
         lobang = obj[0];
@@ -215,6 +222,7 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
     }
 
     private void newGames(){
+        flag = 0;
         currentWaktu = 31;
         btnNew.setText("NEW");
         gameOver = false;
@@ -244,7 +252,9 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
         if(v == btnNew){
             newGames();
         }else if(v == btnExit){
+            gameOver = false;
             this.ctx.onBackPressed();
+            presenter.updateListOfScore(currentScore);
         }
     }
 

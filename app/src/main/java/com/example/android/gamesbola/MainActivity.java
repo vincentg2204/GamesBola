@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
     private FragmentGames fragmentGames;
     private FragmentManager fragmentManager;
@@ -43,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentGames = FragmentGames.newInstance(this, presenter, "GAME FRAGMENT");
         fragmentMenu = FragmentMenu.newInstance(this, "MENU FRAGMENT");
-        fragmentHighscore = FragmentHighscore.newInstance(this, "HIGHSCORE FRAGMENT");
-        fragmentSettings = FragmentSettings.newInstance(this, "SETTINGS FRAGMENT");
+        fragmentHighscore = FragmentHighscore.newInstance(this, presenter, "HIGHSCORE FRAGMENT");
+        fragmentSettings = FragmentSettings.newInstance(this, presenter,"SETTINGS FRAGMENT");
 
         this.nv = findViewById(R.id.nav_view);
         this.dl = findViewById(R.id.drawer_layout);
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             if (fragmentGames.isAdded()) {
                 ft.show(fragmentGames);
             } else {
-                ft.add(R.id.fragment_container, fragmentGames);
+                ft.add(R.id.fragment_container, fragmentGames).addToBackStack(null);
             }
         } else if (page == PAGE_MENU) {
             if (fragmentMenu.isAdded()) {
@@ -93,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        fragmentGames.setGameOver(false);
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
         } else {
@@ -145,5 +148,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void setGameOver(boolean gameOver) {
         fragmentGames.setGameOver(gameOver);
+    }
+
+    public void updateHighScore(ArrayList listOfScore){
+        fragmentHighscore.setData(listOfScore);
     }
 }

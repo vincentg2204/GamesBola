@@ -7,4 +7,7 @@
     <color name="orange">#ff9900</color>
     <color name="white">#ffffff</color>
     <color name="red">#e60000</color>
+    <color name="type1">#b32d00</color>
+    <color name="type2">#0099ff</color>
+    <color name="type3">#4dff4d</color>
 </resources>

@@ -18,21 +18,21 @@ public class FragmentSettings extends Fragment implements View.OnClickListener{
     private Button[] btnGroup = new Button[3];
     private Button unfocus;
     private int[] btnId = {R.id.easy_btn, R.id.med_btn, R.id.hard_btn};
-    private int difficulty;
-    private int curColor;
     private TextView tvCurColor;
-    private ImageButton orange, blue, pink;
+    private ImageButton type1, type2, type3;
+    private MainPresenter presenter;
 
 
-    public static FragmentSettings newInstance(MainActivity mainActivity, String title) {
+    public static FragmentSettings newInstance(MainActivity mainActivity, MainPresenter presenter, String title) {
         FragmentSettings fragment = new FragmentSettings();
         fragment.setMainActivity(mainActivity);
+        fragment.setMainPresenter(presenter);
         Bundle args = new Bundle();
         args.putString("title", title);
         fragment.setArguments(args);
         return fragment;
     }
-
+    public void setMainPresenter(MainPresenter presenter){this.presenter = presenter;}
     public void setMainActivity(MainActivity ui) {
         this.ui = ui;
     }
@@ -50,41 +50,41 @@ public class FragmentSettings extends Fragment implements View.OnClickListener{
         this.tvCurColor = v.findViewById(R.id.cur_color);
         this.tvCurColor.setText("Default");
 
-        pink = v.findViewById(R.id.pink);
-        blue = v.findViewById(R.id.blue);
-        orange = v.findViewById(R.id.orange);
-        pink.setOnClickListener(this);
-        orange.setOnClickListener(this);
-        blue.setOnClickListener(this);
+        type3 = v.findViewById(R.id.type3);
+        type2 = v.findViewById(R.id.type2);
+        type1 = v.findViewById(R.id.type1);
+        type3.setOnClickListener(this);
+        type1.setOnClickListener(this);
+        type2.setOnClickListener(this);
 
         return v;
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.easy_btn){
+        if (v == btnGroup[0]){
             setFocus(unfocus, btnGroup[0]);
-            this.difficulty = 1;
+            presenter.setDifficulty(1);
         }
-        if (v.getId() == R.id.hard_btn){
+        if (v == btnGroup[2]){
             setFocus(unfocus, btnGroup[2]);
-            this.difficulty = 3;
+            presenter.setDifficulty(3);
         }
-        if (v.getId() == R.id.med_btn){
+        if (v == btnGroup[1]){
             setFocus(unfocus, btnGroup[1]);
-            this.difficulty = 2;
+            presenter.setDifficulty(2);
         }
-        if (v.getId() == R.id.pink){
-            tvCurColor.setText("Pink");
-            curColor = R.color.colorAccent;
+        if (v == type3){
+            tvCurColor.setText("Hijau");
+            presenter.setCurColor(3);
         }
-        if (v.getId() == R.id.blue){
-            tvCurColor.setText("Blue");
-            curColor = R.color.colorPrimaryDark;
+        if (v == type2){
+            tvCurColor.setText("Biru");
+            presenter.setCurColor(2);
         }
-        if (v.getId() == R.id.orange){
-            tvCurColor.setText("Orange");
-            curColor = R.color.orange;
+        if (v == type1){
+            tvCurColor.setText("Coklat");
+            presenter.setCurColor(1);
         }
     }
 
@@ -93,4 +93,6 @@ public class FragmentSettings extends Fragment implements View.OnClickListener{
         focus.setBackgroundColor(Color.rgb(3, 106, 150));
         this.unfocus = focus;
     }
+
+
 }
