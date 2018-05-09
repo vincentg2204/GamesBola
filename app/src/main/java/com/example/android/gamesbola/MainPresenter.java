@@ -90,12 +90,12 @@ public class MainPresenter {
                 page++;
             }
             String url = "http://pab.labftis.net/api.php?" + page;
-            final int finalI = i-1;
+            final int finalI = i - 1;
             StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            Log.d("Response", response);
+                            Log.d("ResponsePost", response);
                         }
                     },
                     new Response.ErrorListener() {
@@ -104,14 +104,13 @@ public class MainPresenter {
                             Log.d("Error.Response", "ERROR");
                         }
                     }
-            ) {
+            ){
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
                     params.put("api_key", "2015730021");
-                    params.put("order", finalI +"");
-//                    params.put("value", listOfScore.get(finalI) + "");
-                    params.put("value", 0 + "");
+                    params.put("order", finalI + 1 + "");
+                    params.put("value", listOfScore.get(finalI) + "");
 
                     return params;
                 }
@@ -177,22 +176,22 @@ public class MainPresenter {
 
         Paint paint2 = new Paint();
         paint2.setAntiAlias(true);
-        if(curColor == 1){
+        if (curColor == 1) {
             paint2.setColor(mainActivity.getResources().getColor(R.color.type1));
-        }else if(curColor == 2){
+        } else if (curColor == 2) {
             paint2.setColor(mainActivity.getResources().getColor(R.color.type2));
-        }else if(curColor == 3){
+        } else if (curColor == 3) {
             paint2.setColor(mainActivity.getResources().getColor(R.color.type3));
         }
 
         float radius = 0;
-        if(difficulty == 1){
+        if (difficulty == 1) {
             //easy
             radius = 65f;
-        }else if(difficulty == 2){
+        } else if (difficulty == 2) {
             //medium
             radius = 75f;
-        }else if(difficulty == 3){
+        } else if (difficulty == 3) {
             //hard
             radius = 80f;
         }

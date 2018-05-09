@@ -255,7 +255,6 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
             gameOver = false;
             flag = 0;
             this.ctx.onBackPressed();
-            presenter.updateListOfScore(currentScore);
         }
     }
 
