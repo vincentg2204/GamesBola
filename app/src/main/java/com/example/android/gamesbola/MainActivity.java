@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
         changePage(PAGE_MENU);
+
     }
 
     public void changePage(int page) {
@@ -126,11 +127,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void selectDrawerItem(MenuItem item) {
-        Fragment fragment = null;
-        FragmentTransaction ft = fragmentManager.beginTransaction();
         switch (item.getItemId()) {
             case R.id.high_score:
                 changePage(PAGE_HIGHSCORE);
+                presenter.updateWebService();
                 break;
             case R.id.setting:
                 changePage(PAGE_SETTINGS);

@@ -90,7 +90,7 @@ public class MainPresenter {
                 page++;
             }
             String url = "http://pab.labftis.net/api.php?" + page;
-            final int finalI = i;
+            final int finalI = i-1;
             StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                     new Response.Listener<String>() {
                         @Override
@@ -110,7 +110,8 @@ public class MainPresenter {
                     Map<String, String> params = new HashMap<String, String>();
                     params.put("api_key", "2015730021");
                     params.put("order", finalI +"");
-                    params.put("value", listOfScore.get(finalI) + "");
+//                    params.put("value", listOfScore.get(finalI) + "");
+                    params.put("value", 0 + "");
 
                     return params;
                 }
@@ -167,6 +168,7 @@ public class MainPresenter {
 
         Paint paint1 = new Paint();
         paint1.setColor(Color.BLACK);
+        paint1.setAntiAlias(true);
         Bola lubang = new Bola(x1, y1, paint1, 85f);
 
         float x2 = (float) (Math.random() * (ivBoard.getWidth() - 300) + 100);
@@ -174,6 +176,7 @@ public class MainPresenter {
         float y2 = ivBoard.getHeight() - 200;
 
         Paint paint2 = new Paint();
+        paint2.setAntiAlias(true);
         if(curColor == 1){
             paint2.setColor(mainActivity.getResources().getColor(R.color.type1));
         }else if(curColor == 2){
