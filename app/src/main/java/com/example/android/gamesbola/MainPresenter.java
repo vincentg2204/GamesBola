@@ -27,7 +27,7 @@ public class MainPresenter {
     /* coefficient of restitution */
     private static final float COR = 0.7f;
     private float frameTime = 0.666f;
-    private float xVelocity, yVelocity, xAccelerationOld, yAccelerationOld;
+    private float xVelocity, yVelocity;
     private int waktu;
     private MainActivity mainActivity;
     private ArrayList<Integer> listOfScore = new ArrayList<>();
@@ -158,8 +158,6 @@ public class MainPresenter {
         waktu = 30;
         xVelocity = 0f;
         yVelocity = 0f;
-        xAccelerationOld = 0f;
-        yAccelerationOld = 0f;
 
         float x1 = (float) (Math.random() * (ivBoard.getWidth() - 300) + 100);
 //        float y1 = (float) (Math.random() * (ivBoard.getHeight() / 2) + 100);

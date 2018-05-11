@@ -121,10 +121,10 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
     public void onResume() {
         super.onResume();
         if (mSensorAccelerometer != null) {
-            mSensorManager.registerListener(this, mSensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+            mSensorManager.registerListener(this, mSensorAccelerometer, SensorManager.SENSOR_DELAY_GAME);
         }
         if (mSensorMagnetometer != null) {
-            mSensorManager.registerListener(this, mSensorMagnetometer, SensorManager.SENSOR_DELAY_NORMAL);
+            mSensorManager.registerListener(this, mSensorMagnetometer, SensorManager.SENSOR_DELAY_GAME);
         }
     }
 
