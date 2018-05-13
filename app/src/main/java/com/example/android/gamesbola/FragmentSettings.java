@@ -45,6 +45,7 @@ public class FragmentSettings extends Fragment implements View.OnClickListener{
         for (int i = 0; i < btnGroup.length; i++){
             btnGroup[i] = v.findViewById(btnId[i]);
             btnGroup[i].setOnClickListener(this);
+            btnGroup[i].setBackgroundColor(Color.rgb(207, 207, 207));
         }
         unfocus = btnGroup[0];
         this.tvCurColor = v.findViewById(R.id.cur_color);
