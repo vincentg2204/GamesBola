@@ -26,7 +26,7 @@ import java.util.Map;
 public class MainPresenter {
     /* coefficient of restitution */
     private static final float COR = 0.7f;
-    private float frameTime = 0.666f;
+    private float frameTime = 0.33f;
     private float xVelocity, yVelocity, xAccelerationOld, yAccelerationOld;
     private int waktu;
     private MainActivity mainActivity;
@@ -214,42 +214,43 @@ public class MainPresenter {
 
     public void updateBola(ImageView papan, Bola bola, float xAcceleration, float yAcceleration) {
         float batas = 20f;
+        float kecepatanLambat = 0.1f;
         if (xAcceleration == 0f) {
             if (xVelocity > 0f) {
-                xVelocity -= frameTime;
+                xVelocity -= kecepatanLambat;
                 if (xVelocity < 0f) {
                     xVelocity = 0f;
                 }
             } else if (xVelocity < 0f) {
-                xVelocity += frameTime;
+                xVelocity += kecepatanLambat;
                 if (xVelocity > 0f) {
                     xVelocity = 0f;
                 }
             }
         } else {
             if (xAcceleration < 0f) {
-                xVelocity = (xVelocity - frameTime < -batas) ? -batas : xVelocity - frameTime;
+                xVelocity = (xVelocity - frameTime < -batas) ? -batas : xVelocity - Math.abs(xAcceleration  * frameTime);
             } else if (xAcceleration > 0f) {
-                xVelocity = (xVelocity + frameTime > batas) ? batas : xVelocity + frameTime;
+                xVelocity = (xVelocity + frameTime > batas) ? batas : xVelocity + Math.abs(xAcceleration  * frameTime);
             }
         }
         if (yAcceleration == 0f) {
             if (yVelocity > 0f) {
-                yVelocity -= frameTime;
+                yVelocity -= kecepatanLambat;
                 if (yVelocity < 0f) {
                     yVelocity = 0f;
                 }
             } else if (yVelocity < 0f) {
-                yVelocity += frameTime;
+                yVelocity += kecepatanLambat;
                 if (yVelocity > 0f) {
                     yVelocity = 0f;
                 }
             }
         } else {
             if (yAcceleration < 0f) {
-                yVelocity = (yVelocity + frameTime > batas) ? batas : yVelocity + frameTime;
+                yVelocity = (yVelocity + frameTime > batas) ? batas : yVelocity + Math.abs(yAcceleration  * frameTime);
             } else if (yAcceleration > 0f) {
-                yVelocity = (yVelocity - frameTime < -batas) ? -batas : yVelocity - frameTime;
+                yVelocity = (yVelocity - frameTime < -batas) ? -batas : yVelocity - Math.abs(yAcceleration  * frameTime);
             }
 
         }
