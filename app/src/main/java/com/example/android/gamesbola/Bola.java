@@ -8,6 +8,7 @@ public class Bola {
     private Paint paint;
     private float radius;
     private float xVelo,yVelo;
+    private boolean isInside;
 
     public Bola(float x, float y, Paint paint, float radius) {
         this.x = x;
@@ -16,6 +17,15 @@ public class Bola {
         this.radius = radius;
         xVelo = 0;
         yVelo = 0;
+        isInside = false;
+    }
+
+    public boolean isInside() {
+        return isInside;
+    }
+
+    public void setInside(boolean inside) {
+        isInside = inside;
     }
 
     public float getxVelo() {

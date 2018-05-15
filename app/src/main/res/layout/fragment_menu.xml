@@ -1,36 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
-
-    <TextView
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textAlignment="center"
-        android:id="@+id/tv_judul"
-        android:layout_marginTop="50dp"
-        android:text="Game Bola"
-        android:textSize="50sp"/>
+        android:id="@+id/toolbar"/>
 
-    <Button
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:id="@+id/tv_judul"
+            android:layout_marginTop="50dp"
+            android:text="Game Bola"
+            android:textSize="50sp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="NEW"
+            android:id="@+id/new_btn"
+            android:layout_marginBottom="20dp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="EXIT"
+            android:layout_below="@id/new_btn"
+            android:id="@+id/exit_btn"/>
+
+    </RelativeLayout>
+    <android.support.design.widget.NavigationView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="NEW"
-        android:id="@+id/new_btn"
-        android:layout_marginBottom="20dp"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="EXIT"
-        android:layout_below="@id/new_btn"
-        android:id="@+id/exit_btn"/>
-
-
-
-</RelativeLayout>
+        android:layout_height="match_parent"
+        android:id="@+id/nav_view"
+        android:layout_gravity="start"
+        app:menu="@menu/drawer_view"
+        android:fitsSystemWindows="true"/>
+</android.support.v4.widget.DrawerLayout>

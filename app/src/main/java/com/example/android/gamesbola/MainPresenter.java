@@ -27,7 +27,7 @@ public class MainPresenter {
     /* coefficient of restitution */
     private static final float COR = 0.7f;
     private float frameTime = 0.33f;
-    private float xVelocity, yVelocity, xAccelerationOld, yAccelerationOld;
+    private float xAccelerationOld, yAccelerationOld;
     private int waktu;
     private MainActivity mainActivity;
     private ArrayList<Integer> listOfScore = new ArrayList<>();
@@ -156,23 +156,19 @@ public class MainPresenter {
     @SuppressLint("ResourceAsColor")
     public Bola[] newGames(ImageView ivBoard) {
         waktu = 30;
-        xVelocity = 0f;
-        yVelocity = 0f;
         xAccelerationOld = 0f;
         yAccelerationOld = 0f;
 
-        float x1 = (float) (Math.random() * (ivBoard.getWidth() - 300) + 100);
-//        float y1 = (float) (Math.random() * (ivBoard.getHeight() / 2) + 100);
-        float y1 = 200;
+        float xLobang = (float) (Math.random() * (ivBoard.getWidth() - 300) + 100);
+        float yLobang = 200;
 
         Paint paint1 = new Paint();
         paint1.setColor(Color.BLACK);
         paint1.setAntiAlias(true);
-        Bola lubang = new Bola(x1, y1, paint1, 85f);
+        Bola lubang = new Bola(xLobang, yLobang, paint1, 85f);
 
-        float x2 = (float) (Math.random() * (ivBoard.getWidth() - 300) + 100);
-//        float y2 = (float) (Math.random() * (ivBoard.getHeight() / 2) + (ivBoard.getHeight() / 2) - 100);
-        float y2 = ivBoard.getHeight() - 200;
+        float xBola1 = (float) (Math.random() * (ivBoard.getWidth() - 300) + 100);
+        float yBola1 = ivBoard.getHeight() - 200;
 
         Paint paint2 = new Paint();
         paint2.setAntiAlias(true);
@@ -195,86 +191,92 @@ public class MainPresenter {
             //hard
             radius = 80f;
         }
-        Bola bola = new Bola(x2, y2, paint2, radius);
-        return new Bola[]{lubang, bola};
+        Bola bola1 = new Bola(xBola1, yBola1, paint2, radius);
+
+        float xBola2 = (float) (Math.random() * (ivBoard.getWidth() - 300) + 100);
+        float yBola2 = ivBoard.getHeight() - 200;
+
+        Bola bola2 = new Bola(xBola2,yBola2,paint2,radius);
+        return new Bola[]{lubang, bola1, bola2};
     }
 
     public boolean isInside(Bola bola, Bola lobang) {
-//        boolean a = (bola.getX() - bola.getRadius()) > (lobang.getX()-lobang.getRadius());
-//        boolean b = (bola.getY() - bola.getRadius()) > (lobang.getY()-lobang.getRadius());
-//        boolean c = (bola.getX() + bola.getRadius()) < (lobang.getX()+lobang.getRadius());
-//        boolean d = (bola.getY() + bola.getRadius()) < (lobang.getY()+lobang.getRadius());
         return (bola.getX() - bola.getRadius()) > (lobang.getX() - lobang.getRadius()) &&
                 (bola.getY() - bola.getRadius()) > (lobang.getY() - lobang.getRadius()) &&
                 (bola.getX() + bola.getRadius()) < (lobang.getX() + lobang.getRadius()) &&
                 (bola.getY() + bola.getRadius()) < (lobang.getY() + lobang.getRadius());
-//        Log.d("ISINSIDE","KIRI: "+a+"\nATAS: "+b+"\nKANAN: "+c+"\nBAWAH: "+d);
-//        return a && b && c && d;
     }
 
-    public void updateBola(ImageView papan, Bola bola, float xAcceleration, float yAcceleration) {
-        float batas = 20f;
-        float kecepatanLambat = 0.1f;
-        if (xAcceleration == 0f) {
-            if (xVelocity > 0f) {
-                xVelocity -= kecepatanLambat;
-                if (xVelocity < 0f) {
-                    xVelocity = 0f;
+    public void updateBola(ImageView papan, Bola[] bola, float xAcceleration, float yAcceleration) {
+        for(int i=0;i<bola.length;i++) {
+            float batas = 20f;
+            float kecepatanLambat = 0.1f;
+            if (xAcceleration == 0f) {
+                if (bola[i].getxVelo() > 0f) {
+                    bola[i].setxVelo(bola[i].getxVelo() - kecepatanLambat);
+                    if (bola[i].getxVelo() < 0f) {
+                        bola[i].setxVelo(0f);
+                    }
+                } else if (bola[i].getxVelo() < 0f) {
+                    bola[i].setxVelo(bola[i].getxVelo() + kecepatanLambat);
+                    if (bola[i].getxVelo() > 0f) {
+                        bola[i].setxVelo(0f);
+                    }
                 }
-            } else if (xVelocity < 0f) {
-                xVelocity += kecepatanLambat;
-                if (xVelocity > 0f) {
-                    xVelocity = 0f;
-                }
-            }
-        } else {
-            if (xAcceleration < 0f) {
-                xVelocity = (xVelocity - frameTime < -batas) ? -batas : xVelocity - Math.abs(xAcceleration  * frameTime);
-            } else if (xAcceleration > 0f) {
-                xVelocity = (xVelocity + frameTime > batas) ? batas : xVelocity + Math.abs(xAcceleration  * frameTime);
-            }
-        }
-        if (yAcceleration == 0f) {
-            if (yVelocity > 0f) {
-                yVelocity -= kecepatanLambat;
-                if (yVelocity < 0f) {
-                    yVelocity = 0f;
-                }
-            } else if (yVelocity < 0f) {
-                yVelocity += kecepatanLambat;
-                if (yVelocity > 0f) {
-                    yVelocity = 0f;
+            } else {
+                if (xAcceleration < 0f) {
+                    bola[i].setxVelo(((bola[i].getxVelo() - frameTime) < -batas) ? -batas : bola[i].getxVelo() - Math.abs(xAcceleration * frameTime));
+                } else if (xAcceleration > 0f) {
+                    bola[i].setxVelo((bola[i].getxVelo() + frameTime > batas) ? batas : bola[i].getxVelo() + Math.abs(xAcceleration * frameTime));
                 }
             }
-        } else {
-            if (yAcceleration < 0f) {
-                yVelocity = (yVelocity + frameTime > batas) ? batas : yVelocity + Math.abs(yAcceleration  * frameTime);
-            } else if (yAcceleration > 0f) {
-                yVelocity = (yVelocity - frameTime < -batas) ? -batas : yVelocity - Math.abs(yAcceleration  * frameTime);
+            if (yAcceleration == 0f) {
+                if (bola[i].getyVelo() > 0f) {
+                    bola[i].setyVelo(bola[i].getyVelo() - kecepatanLambat);
+                    if (bola[i].getyVelo() < 0f) {
+                        bola[i].setyVelo(0f);
+                    }
+                } else if (bola[i].getyVelo() < 0f) {
+                    bola[i].setyVelo(bola[i].getyVelo() + kecepatanLambat);
+                    if (bola[i].getyVelo() > 0f) {
+                        bola[i].setyVelo(0f);
+                    }
+                }
+            } else {
+                if (yAcceleration < 0f) {
+                    bola[i].setyVelo((bola[i].getyVelo() + frameTime > batas) ? batas : bola[i].getyVelo() + Math.abs(yAcceleration * frameTime));
+                } else if (yAcceleration > 0f) {
+                    bola[i].setyVelo((bola[i].getyVelo() - frameTime < -batas) ? -batas : bola[i].getyVelo() - Math.abs(yAcceleration * frameTime));
+                }
+            }
+            if(i % 2 == 0){
+                bola[i].setX(bola[i].getX() + bola[i].getxVelo());
+                bola[i].setY(bola[i].getY() + bola[i].getyVelo());
+            }else{
+                bola[i].setX(bola[i].getX() - bola[i].getxVelo());
+                bola[i].setY(bola[i].getY() - bola[i].getyVelo());
             }
 
         }
-
-        bola.setX(bola.getX() + xVelocity);
-        bola.setY(bola.getY() + yVelocity);
         checkCollision(papan, bola);
-
     }
 
-    private void checkCollision(ImageView papan, Bola bola) {
-        if (bola.getX() + bola.getRadius() > papan.getWidth()) {
-            bola.setX(papan.getWidth() - bola.getRadius());
-            xVelocity = -xVelocity * COR;
-        } else if (bola.getX() - bola.getRadius() < papan.getX()) {
-            bola.setX(papan.getX() + bola.getRadius());
-            xVelocity = -xVelocity * COR;
-        }
-        if (bola.getY() + bola.getRadius() > papan.getHeight()) {
-            bola.setY(papan.getHeight() - bola.getRadius());
-            yVelocity = -yVelocity * COR;
-        } else if (bola.getY() - bola.getRadius() < papan.getY()) {
-            bola.setY(papan.getY() + bola.getRadius());
-            yVelocity = -yVelocity * COR;
+    private void checkCollision(ImageView papan, Bola[] bola) {
+        for(Bola b : bola) {
+            if (b.getX() + b.getRadius() > papan.getWidth()) {
+                b.setX(papan.getWidth() - b.getRadius());
+                b.setxVelo(-b.getxVelo() * COR);
+            } else if (b.getX() - b.getRadius() < papan.getX()) {
+                b.setX(papan.getX() + b.getRadius());
+                b.setxVelo(-b.getxVelo() * COR);
+            }
+            if (b.getY() + b.getRadius() > papan.getHeight()) {
+                b.setY(papan.getHeight() - b.getRadius());
+                b.setyVelo(-b.getyVelo() * COR);
+            } else if (b.getY() - b.getRadius() < papan.getY()) {
+                b.setY(papan.getY() + b.getRadius());
+                b.setyVelo(-b.getyVelo() * COR);
+            }
         }
     }
 

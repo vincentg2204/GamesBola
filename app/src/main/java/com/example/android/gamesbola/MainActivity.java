@@ -26,10 +26,6 @@ public class MainActivity extends AppCompatActivity {
     private FragmentHighscore fragmentHighscore;
     private MainPresenter presenter;
 
-    private NavigationView nv;
-    private ActionBar actionBar;
-    private Toolbar toolbar;
-    protected DrawerLayout dl;
 
     public static int PAGE_GAMES = 1;
     public static int PAGE_MENU = 2;
@@ -44,20 +40,9 @@ public class MainActivity extends AppCompatActivity {
         presenter = new MainPresenter(this);
 
         fragmentGames = FragmentGames.newInstance(this, presenter, "GAME FRAGMENT");
-        fragmentMenu = FragmentMenu.newInstance(this, "MENU FRAGMENT");
+        fragmentMenu = FragmentMenu.newInstance(this, presenter,"MENU FRAGMENT");
         fragmentHighscore = FragmentHighscore.newInstance(this, presenter, "HIGHSCORE FRAGMENT");
         fragmentSettings = FragmentSettings.newInstance(this, presenter,"SETTINGS FRAGMENT");
-
-        this.nv = findViewById(R.id.nav_view);
-        this.dl = findViewById(R.id.drawer_layout);
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
-        actionBar.setDisplayShowTitleEnabled(false);
-
-        setupDrawerContent(nv);
 
         fragmentManager = getSupportFragmentManager();
         changePage(PAGE_MENU);
@@ -104,43 +89,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                dl.openDrawer(GravityCompat.START);
-                return true;
-            default:
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
-    private void setupDrawerContent(NavigationView nv) {
-        nv.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        selectDrawerItem(item);
-                        return true;
-                    }
-                });
-    }
-
-    public void selectDrawerItem(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.high_score:
-                changePage(PAGE_HIGHSCORE);
-                presenter.updateWebService();
-                break;
-            case R.id.setting:
-                changePage(PAGE_SETTINGS);
-                break;
-            case R.id.exit:
-                System.exit(0);
-        }
-        dl.closeDrawers();
-        item.setChecked(true);
-    }
 
     public void setTime() {
         fragmentGames.setTextTVWaktu(presenter.getWaktu());

@@ -3,7 +3,6 @@ package com.example.android.gamesbola;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -22,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,6 +33,7 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
     private Button btnNew, btnExit;
     private TextView tvWaktu;
     private boolean gameOver = false;
+    private ImageButton ibStartPause;
 
     private MainPresenter presenter;
 
@@ -41,15 +42,18 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
     private Display mDisplay;
     private float[] mAccelerometerData, mMagnetometerData;
 
-    private Bola bola,lobang;
+    private Bola bola1,bola2,lobang;
     private MainActivity ctx;
     private CounterAsyncTask cat;
 
     private TextView tvScore;
     private int currentScore = 0;
 
-    private int currentWaktu = 31;
+    private int currentWaktu = 61;
     private int flag = 0;
+
+    private int jumlahMasuk = 0;
+    private boolean isPaused = false;
 
     public FragmentGames() {
     }
@@ -89,9 +93,8 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
         tvWaktu = view.findViewById(R.id.tv_waktu);
         btnNew = view.findViewById(R.id.new_btn);
         btnExit = view.findViewById(R.id.exit_btn);
-
         tvScore = view.findViewById(R.id.tvScore);
-
+        ibStartPause = view.findViewById(R.id.ib_start_pause);
         ivBoard = view.findViewById(R.id.iv_board);
         ivBoard.post(new Runnable() {
             @Override
@@ -105,6 +108,7 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
 
         btnNew.setOnClickListener(this);
         btnExit.setOnClickListener(this);
+        ibStartPause.setOnClickListener(this);
 
         mSensorManager = (SensorManager) ctx.getSystemService(Context.SENSOR_SERVICE);
         mSensorAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -136,56 +140,68 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        int sType = event.sensor.getType();
-        switch (sType) {
-            case Sensor.TYPE_ACCELEROMETER:
-                mAccelerometerData = event.values.clone();
-                break;
-            case Sensor.TYPE_MAGNETIC_FIELD:
-                mMagnetometerData = event.values.clone();
-                break;
-        }
+        if(!isPaused) {
+            int sType = event.sensor.getType();
+            switch (sType) {
+                case Sensor.TYPE_ACCELEROMETER:
+                    mAccelerometerData = event.values.clone();
+                    break;
+                case Sensor.TYPE_MAGNETIC_FIELD:
+                    mMagnetometerData = event.values.clone();
+                    break;
+            }
 
-        float[] rotationMatrix = new float[9];
-        boolean rotationOK = SensorManager.getRotationMatrix(rotationMatrix, null, mAccelerometerData, mMagnetometerData);
-        float[] rotationmatrixAdjusted = new float[9];
-        switch (mDisplay.getRotation()) {
-            case Surface.ROTATION_0:
-                rotationmatrixAdjusted = rotationMatrix.clone();
-                break;
-            case Surface.ROTATION_90:
-                SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_Y, SensorManager.AXIS_MINUS_X, rotationmatrixAdjusted);
-                break;
-            case Surface.ROTATION_180:
-                SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_MINUS_X, SensorManager.AXIS_MINUS_Y, rotationmatrixAdjusted);
-                break;
-            case Surface.ROTATION_270:
-                SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_MINUS_Y, SensorManager.AXIS_X, rotationmatrixAdjusted);
-                break;
-        }
+            float[] rotationMatrix = new float[9];
+            boolean rotationOK = SensorManager.getRotationMatrix(rotationMatrix, null, mAccelerometerData, mMagnetometerData);
+            float[] rotationmatrixAdjusted = new float[9];
+            switch (mDisplay.getRotation()) {
+                case Surface.ROTATION_0:
+                    rotationmatrixAdjusted = rotationMatrix.clone();
+                    break;
+                case Surface.ROTATION_90:
+                    SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_Y, SensorManager.AXIS_MINUS_X, rotationmatrixAdjusted);
+                    break;
+                case Surface.ROTATION_180:
+                    SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_MINUS_X, SensorManager.AXIS_MINUS_Y, rotationmatrixAdjusted);
+                    break;
+                case Surface.ROTATION_270:
+                    SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_MINUS_Y, SensorManager.AXIS_X, rotationmatrixAdjusted);
+                    break;
+            }
 
-        float orientationValues[] = new float[3];
-        if (rotationOK) {
-            SensorManager.getOrientation(rotationmatrixAdjusted, orientationValues);
-        }
-        tampilanWaktu();
-        if(canvas != null && lobang != null && bola != null){
-            if(!gameOver) {
-                updateBall(ivBoard,
-                        (Math.abs(orientationValues[1]) < 0.05f) ? 0f : orientationValues[1],
-                        (Math.abs(orientationValues[2]) < 0.05f) ? 0f : orientationValues[2]);
-                canvas.drawColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
-                canvas.drawCircle(lobang.getX(), lobang.getY(), lobang.getRadius(), lobang.getPaint());
-                canvas.drawCircle(bola.getX(), bola.getY(), bola.getRadius(), bola.getPaint());
-                ivBoard.invalidate();
-                if (presenter.isInside(bola, lobang)) {
+            float orientationValues[] = new float[3];
+            if (rotationOK) {
+                SensorManager.getOrientation(rotationmatrixAdjusted, orientationValues);
+            }
+            tampilanWaktu();
+            if (canvas != null && lobang != null && bola1 != null) {
+                if (!gameOver) {
+                    updateBall(ivBoard,
+                            (Math.abs(orientationValues[1]) < 0.05f) ? 0f : orientationValues[1],
+                            (Math.abs(orientationValues[2]) < 0.05f) ? 0f : orientationValues[2]);
+                    canvas.drawColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
+                    canvas.drawCircle(lobang.getX(), lobang.getY(), lobang.getRadius(), lobang.getPaint());
+                    if (!bola1.isInside()) {
+                        canvas.drawCircle(bola1.getX(), bola1.getY(), bola1.getRadius(), bola1.getPaint());
+                    }
+                    if (!bola2.isInside()) {
+                        canvas.drawCircle(bola2.getX(), bola2.getY(), bola2.getRadius(), bola2.getPaint());
+                    }
+                    ivBoard.invalidate();
+
+                    if (presenter.isInside(bola1, lobang)) {
+                        bola1.setInside(true);
+                    }
+                    if (presenter.isInside(bola2, lobang)) {
+                        bola2.setInside(true);
+                    }
                     nextLevel();
-                }
-            }else{
-                if(flag == 0) {
-                    btnNew.setText("TRY AGAIN");
-                    presenter.updateListOfScore(currentScore);
-                    flag = 1;
+                } else {
+                    if (flag == 0) {
+                        btnNew.setText("TRY AGAIN");
+                        presenter.updateListOfScore(currentScore);
+                        flag = 1;
+                    }
                 }
             }
         }
@@ -196,55 +212,42 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
 
     }
     private void nextLevel(){
-        flag = 0;
-        gameOver = false;
-        currentScore += (int)(currentWaktu * 3.3);
-        tvScore.setText("Score: "+currentScore);
-
-        currentWaktu = 31;
-        btnNew.setText("NEW");
-
-        Bola[] obj = presenter.newGames(ivBoard);
-        lobang = obj[0];
-        bola = obj[1];
-
-        canvas.drawColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
-        canvas.drawCircle(lobang.getX(),lobang.getY(),lobang.getRadius(), lobang.getPaint());
-        canvas.drawCircle(bola.getX(),bola.getY(),bola.getRadius(), bola.getPaint());
-
-        ivBoard.invalidate();
-
-        if(cat != null) {
-            cat.cancel(true);
+        if(bola1.isInside() && bola2.isInside()){
+            currentScore += (int) (currentWaktu * 3.3);
+            init();
         }
-        cat = new CounterAsyncTask(presenter);
-        cat.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 31);
     }
 
     private void newGames(){
-        flag = 0;
-        currentWaktu = 31;
-        btnNew.setText("NEW");
-        gameOver = false;
         currentScore = 0;
-        tvScore.setText("Score: "+currentScore);
+        init();
+    }
+    private void init(){
+        jumlahMasuk = 0;
+        flag = 0;
+        gameOver = false;
+        isPaused = false;
+        currentWaktu = 61;
+        btnNew.setText("NEW");
 
         Bola[] obj = presenter.newGames(ivBoard);
         lobang = obj[0];
-        bola = obj[1];
+        bola1 = obj[1];
+        bola2 = obj[2];
 
         canvas.drawColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
-        canvas.drawCircle(lobang.getX(),lobang.getY(),lobang.getRadius(), lobang.getPaint());
-        canvas.drawCircle(bola.getX(),bola.getY(),bola.getRadius(), bola.getPaint());
+        canvas.drawCircle(lobang.getX(), lobang.getY(), lobang.getRadius(), lobang.getPaint());
+        canvas.drawCircle(bola1.getX(), bola1.getY(), bola1.getRadius(), bola1.getPaint());
 
         ivBoard.invalidate();
 
-        if(cat != null) {
+        if (cat != null) {
             cat.cancel(true);
         }
         cat = new CounterAsyncTask(presenter);
-        cat.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 31);
+        cat.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentWaktu);
 
+        tvScore.setText("Score: " + currentScore);
     }
 
     @Override
@@ -255,11 +258,23 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
             gameOver = false;
             flag = 0;
             this.ctx.onBackPressed();
+        }else if(v == ibStartPause){
+            if(!isPaused){
+                isPaused = true;
+                cat.cancel(true);
+                ibStartPause.setImageResource(R.drawable.ic_start);
+            }else{
+                isPaused = false;
+                cat = new CounterAsyncTask(presenter);
+                cat.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentWaktu);
+                ibStartPause.setImageResource(R.drawable.ic_pause);
+            }
         }
     }
 
     private void updateBall(ImageView papan, float yAcceleration, float xAcceleration){
-        presenter.updateBola(papan,bola,xAcceleration,yAcceleration);
+        Bola[] bolas = new Bola[]{bola1,bola2};
+        presenter.updateBola(papan, bolas,xAcceleration,yAcceleration);
     }
     private void tampilanWaktu(){
         if(gameOver || currentWaktu < 10) {

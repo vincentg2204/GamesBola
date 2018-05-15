@@ -17,6 +17,16 @@
         android:layout_marginTop="@dimen/_5sdp"
         android:textSize="@dimen/_18sdp"
         android:id="@+id/tvScore"/>
+    <ImageButton
+        android:id="@+id/ib_start_pause"
+        android:layout_width="@dimen/_25sdp"
+        android:layout_height="@dimen/_25sdp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_pause"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:layout_alignParentRight="true"
+        android:background="@null"/>
     <LinearLayout
         android:id="@+id/menu_bawah"
         android:layout_alignParentBottom="true"
