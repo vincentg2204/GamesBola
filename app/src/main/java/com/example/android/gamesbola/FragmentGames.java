@@ -49,7 +49,7 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
     private TextView tvScore;
     private int currentScore = 0;
 
-    private int currentWaktu = 61;
+    private int currentWaktu = 31;
     private int flag = 0;
 
     private int jumlahMasuk = 0;
@@ -227,7 +227,7 @@ public class FragmentGames extends Fragment implements SensorEventListener, View
         flag = 0;
         gameOver = false;
         isPaused = false;
-        currentWaktu = 61;
+        currentWaktu = 31;
         btnNew.setText("NEW");
 
         Bola[] obj = presenter.newGames(ivBoard);
